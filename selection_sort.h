@@ -1,21 +1,24 @@
 ﻿// Copyright (c) 2013 Craig Henderson
 // https://github.com/cdmh/sorting_algorithms
 
-#pragma once
-
-#include <functional>
+#include "sort.h"
 
 namespace cdmh {
-namespace detail {
 
-template <typename It, typename Distance>
-inline It advance(It it, Distance n)
+// Selection Sort
+//      Worst case performance      О(n^2)
+//      Best case performance       О(n^2)
+//      Average case performance    О(n^2)
+//      Worst case space complexity О(n) total, O(1) auxiliary
+// http://en.wikipedia.org/wiki/Selection_sort
+
+template<typename It, typename Pred=std::less<typename std::iterator_traits<It>::value_type>>
+inline void selection_sort(It begin, It end, Pred pred=Pred())
 {
-    std::advance(it, n);
-    return it;
+    for (auto it=begin; it!= end; ++it)
+        std::swap(*std::min_element(it, end, pred), *it);
 }
 
-}   // namespace detail
 }   // namespace cdmh
 
 // Permission is hereby granted, free of charge, to any person obtaining a copy

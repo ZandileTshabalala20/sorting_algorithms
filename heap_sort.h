@@ -3,19 +3,25 @@
 
 #pragma once
 
-#include <functional>
+#include "sort.h"
+#include <algorithm>    // make_heap
 
 namespace cdmh {
-namespace detail {
 
-template <typename It, typename Distance>
-inline It advance(It it, Distance n)
+// Heap Sort
+//     Worst case performance       O(n log n)
+//     Best case performance        Omega(n), O(n log n)
+//     Average case performance	    O(n log n)
+//     Worst case space complexity  O(n) total, O(1) auxiliary
+// http://en.wikipedia.org/wiki/Heapsort
+
+template<typename It, typename Pred=std::less<typename std::iterator_traits<It>::value_type>>
+inline void heap_sort(It begin, It end, Pred pred=Pred())
 {
-    std::advance(it, n);
-    return it;
+    std::make_heap(begin, end, pred);
+    std::sort_heap(begin, end, pred);
 }
 
-}   // namespace detail
 }   // namespace cdmh
 
 // Permission is hereby granted, free of charge, to any person obtaining a copy

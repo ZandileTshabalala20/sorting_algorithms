@@ -1,21 +1,36 @@
 ﻿// Copyright (c) 2013 Craig Henderson
 // https://github.com/cdmh/sorting_algorithms
 
-#pragma once
-
-#include <functional>
+#include "sort.h"
 
 namespace cdmh {
-namespace detail {
 
-template <typename It, typename Distance>
-inline It advance(It it, Distance n)
+// MinMax Sort
+
+template<typename It, typename Pred=std::less<typename std::iterator_traits<It>::value_type>>
+inline void minmax_sort(It begin, It end, Pred pred=Pred())
 {
-    std::advance(it, n);
-    return it;
+    auto count = std::distance(begin, end);
+    for (auto it=begin, ite=end; count > 1; ++it, count-=2)
+    {
+        auto minmax = std::minmax_element(it, ite, pred);
+        std::advance(ite,-1);
+
+        if (minmax.second == it  &&  minmax.first == ite)
+            std::swap(*it, *ite);
+        else if (minmax.second == it)
+        {
+            std::swap(*minmax.second, *ite);
+            std::swap(*minmax.first, *it);
+        }
+        else
+        {
+            std::swap(*minmax.first, *it);
+            std::swap(*minmax.second, *ite);
+        }
+    }
 }
 
-}   // namespace detail
 }   // namespace cdmh
 
 // Permission is hereby granted, free of charge, to any person obtaining a copy

@@ -1,21 +1,42 @@
 ﻿// Copyright (c) 2013 Craig Henderson
 // https://github.com/cdmh/sorting_algorithms
 
-#pragma once
-
-#include <functional>
+#include "sort.h"
 
 namespace cdmh {
-namespace detail {
 
-template <typename It, typename Distance>
-inline It advance(It it, Distance n)
+// Insertion Sort
+//    Worst case performance            О(n2) comparisons, swaps
+//    Best case performance             O(n) comparisons, O(1) swaps
+//    Average case performance          О(n2) comparisons, swaps
+//    Worst case space complexity       О(n) total, O(1)
+// http://en.wikipedia.org/wiki/Insertion_sort
+
+template<typename It, typename Pred=std::less<typename std::iterator_traits<It>::value_type>>
+inline void insertion_sort(It begin, It end, Pred pred=Pred())
 {
-    std::advance(it, n);
-    return it;
+    if (begin == end)
+        return;
+
+    for (auto it=begin; ++it != end; )
+    {
+        auto it2 = it;
+        auto value = std::move(*it);
+
+        if (pred(value, *begin))
+        {
+            std::move_backward(begin, it, ++it2);
+            *begin = std::move(value);
+        }
+        else
+        {
+            for (auto first = it2; pred(value, *--first); it2=first)
+                *it2 = std::move(*first);
+            *it2 = std::move(value);
+        }
+    }
 }
 
-}   // namespace detail
 }   // namespace cdmh
 
 // Permission is hereby granted, free of charge, to any person obtaining a copy

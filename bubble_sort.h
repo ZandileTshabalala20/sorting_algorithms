@@ -1,21 +1,41 @@
 ﻿// Copyright (c) 2013 Craig Henderson
 // https://github.com/cdmh/sorting_algorithms
 
-#pragma once
-
-#include <functional>
+#include "sort.h"
 
 namespace cdmh {
-namespace detail {
 
-template <typename It, typename Distance>
-inline It advance(It it, Distance n)
+// Bubble Sort
+//     Worst case performance       O(n^2)
+//     Best case performance        O(n)
+//     Average case performance     O(n^2)
+//     Wost case space complexity   O(1)
+// http://en.wikipedia.org/wiki/Bubble_sort
+
+template<typename It, typename Pred=std::less<typename std::iterator_traits<It>::value_type>>
+inline void bubble_sort(It begin, It end, Pred pred=Pred())
 {
-    std::advance(it, n);
-    return it;
+    if (std::distance(begin, end) <= 1)
+        return;
+    
+    auto ite      = end;
+    bool finished = false;
+    while (!finished)
+    {
+        finished = true;
+        std::advance(ite, -1);
+        for (auto it=begin; it!=ite; ++it)
+        {
+            auto next = detail::advance(it, 1);
+            if (pred(*next, *it))
+            {
+                std::swap(*it, *next);
+                finished = false;
+            }
+        }
+    }
 }
 
-}   // namespace detail
 }   // namespace cdmh
 
 // Permission is hereby granted, free of charge, to any person obtaining a copy

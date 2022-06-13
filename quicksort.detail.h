@@ -3,19 +3,44 @@
 
 #pragma once
 
-#include <functional>
-
 namespace cdmh {
+
 namespace detail {
 
-template <typename It, typename Distance>
-inline It advance(It it, Distance n)
+template<typename T>
+inline T median(T const &t1, T const &t2, T const &t3)
 {
-    std::advance(it, n);
-    return it;
+    if (t1 < t2)
+    {
+        if (t2 < t3)
+            return t2;
+        else if (t1 < t3)
+            return t3;
+        else
+            return t1;
+    }
+    else if (t1 < t3)
+        return t1;
+    else if (t2 < t3)
+        return t3;
+    else
+        return t2;
+}
+
+template<typename It, typename Pred>
+inline std::pair<It,It> quicksort_splits(It begin, It end, Pred pred)
+{
+    using value_t = typename std::iterator_traits<It>::value_type;
+    using namespace std::placeholders;
+
+    auto const not_pred = [&pred](value_t const &first, value_t const &second) { return !pred(second, first); };
+    auto const pivot    = detail::median(*begin, *detail::advance(begin, std::distance(begin, end) / 2), *detail::advance(end, -1));
+    auto const split    = std::partition(begin, end, std::bind(pred, _1, pivot));
+    return std::make_pair(split, std::partition(split, end, std::bind(not_pred, _1, pivot)));
 }
 
 }   // namespace detail
+
 }   // namespace cdmh
 
 // Permission is hereby granted, free of charge, to any person obtaining a copy

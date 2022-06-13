@@ -1,21 +1,24 @@
 ﻿// Copyright (c) 2013 Craig Henderson
 // https://github.com/cdmh/sorting_algorithms
 
-#pragma once
-
-#include <functional>
+#include "sort.h"
+#include "introsort.detail.h"
+#include <cmath>    // floor, log
 
 namespace cdmh {
-namespace detail {
 
-template <typename It, typename Distance>
-inline It advance(It it, Distance n)
+// Introsort
+//     Worst case performance       O(n log n)
+//     Average case performance     O(n log n)
+// http://en.wikipedia.org/wiki/Introsort
+
+template<typename It, typename Pred=std::less<typename std::iterator_traits<It>::value_type>>
+inline void introsort(It begin, It end, Pred pred=Pred())
 {
-    std::advance(it, n);
-    return it;
+    if (std::distance(begin, end) > 1)
+        detail::introsort(begin, end, pred, (size_t)floor(log(std::distance(begin,end)/log(2.0))));
 }
 
-}   // namespace detail
 }   // namespace cdmh
 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
