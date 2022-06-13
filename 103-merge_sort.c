@@ -1,4 +1,6 @@
 #include "sort.h"
+#include <stdlib.h>
+#include <stdio.h>
 
 /**
 * merge - Merges the splits from merge_sorty
