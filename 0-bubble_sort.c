@@ -1,31 +1,47 @@
 #include "sort.h"
 
 /**
- * bubble_sort - sorts an array
- * of integers. However, as it swaps
- * an element, it also prints a
- * representation of the array's current
- * state.
- * @array: array of integers to be sorted
- * @size: size of the array
- * Return: Always void
+ * swap_values - swaps 2 values in an array of ints
+ *
+ * @array: the array of ints
+ * @i1: index of first value
+ * @i2: index of 2nd value
+ *
+ * Return: the array with value
  */
+
+void swap_values(int **array, ssize_t i1, ssize_t i2)
+{
+	int tmp;
+
+	tmp = (*array)[i1];
+	(*array)[i1] = (*array)[i2];
+	(*array)[i2] = tmp;
+}
+
+/**
+ * bubble_sort - sorts an array of integers using bubble sort
+ *
+ * @array: the array of integers
+ * @size: the size of the array
+ */
+
 void bubble_sort(int *array, size_t size)
 {
-	unsigned int i, temp, flag = 1;
+	size_t n = size, new_n, i;
 
-	if (!array)
-		return;
-
-	while (flag == 1 && i != size)
-		for (i = 0, flag = 0; i < size - 1; i++)
+	while (n > 1)
+	{
+		new_n = 0;
+		for (i = 1; i <= n - 1; i++)
 		{
-			/* Create a window comparing two ints */
-			if (array[i] > array[i + 1])
+			if (array[i - 1] > array[i])
 			{
-				/* If the current index > next index, swap the elements */
-				temp = array[i + 1], array[i + 1] = array[i], array[i] = temp;
-				print_array(array, size), flag = 1;	/* Print the updated array */
+				swap_values(&array, i - 1, i);
+				print_array(array, size);
+				new_n = i;
 			}
 		}
+		n = new_n;
+	}
 }
